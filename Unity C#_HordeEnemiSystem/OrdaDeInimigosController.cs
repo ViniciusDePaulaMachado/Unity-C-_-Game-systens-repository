@@ -62,7 +62,7 @@ public class OrdaDeInimigosController : MonoBehaviour
         if(other.CompareTag(tagPlayer))
         {
             ordaManagerUI.AtivarUI(false);
-            spawnarChefao = false;
+            spawnarChefao = true;
 
             if(quantidadeInimigosAtual > 0)
             {
