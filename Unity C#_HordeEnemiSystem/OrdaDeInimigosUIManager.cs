@@ -55,7 +55,7 @@ public class OrdaDeInimigosUIManager : MonoBehaviour
     /// </summary>
     public void LimparTextoUI(int index)
     {
-        if(index < textosDeInformacao.Length || index > 0)
+        if(index < textosDeInformacao.Length || index >= 0)
         {
             textosDeInformacao[index].text = string.Empty;
         }
