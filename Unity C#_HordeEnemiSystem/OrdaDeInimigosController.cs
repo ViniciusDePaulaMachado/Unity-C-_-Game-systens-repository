@@ -45,6 +45,7 @@ public class OrdaDeInimigosController : MonoBehaviour
             maxInimigos += quantidadeInimigosPorOrda;
         }
 
+        maxInimigos += quantidadeChefoes;
         quantidadeInimigosAtual = maxInimigos;
     }
 
@@ -97,7 +98,7 @@ public class OrdaDeInimigosController : MonoBehaviour
 
             //Trocar por um Pool de objetos
             Instantiate(inimigos[inimAleatorio], locaisDeSpawn[posAleatorio].position, Quaternion.identity).
-                GetComponent<InimigoController>().OnDie += InimigoMorto;
+                GetComponent<InimigoController>().OnDie += InimigoMorto; //observa o evento ondie do inimigo
         }
     }
 
@@ -105,7 +106,7 @@ public class OrdaDeInimigosController : MonoBehaviour
 
     private void InimigoMorto(InimigoController inimigo)
     {
-        inimigo.GetComponent<InimigoController>().OnDie -= InimigoMorto;
+        inimigo.GetComponent<InimigoController>().OnDie -= InimigoMorto; //desinscreve do evento ondie
 
         quantidadeInimigosAtual--;
 
@@ -118,12 +119,12 @@ public class OrdaDeInimigosController : MonoBehaviour
             inimigosMortos = 0;
         }
 
-        if(quantidadeInimigosAtual <= 0)
+        if(quantidadeInimigosAtual <= quantidadeChefoes)
         {
             SpawnarChefe();
         }
 
-        if(quantidadeInimigosAtual < 0)
+        if(quantidadeInimigosAtual <= -quantidadeChefoes)
         {
             ordaManagerUI.AtivarUI(false);
             Venceu();
@@ -182,6 +183,31 @@ public class OrdaDeInimigosController : MonoBehaviour
         for(int i = 0; i < inimigos.Length; i++)
         {
             inimigos[i].GetComponent<InimigoController>().OnDie -= InimigoMorto;
+        }
+    }
+}
+
+//exemplo de implementação do inimigo
+namespace Exemplo
+{
+    using System;
+    public class InimigoController : MonoBehaviour
+    {
+        public Action<InimigoController> OnDie;
+        public int vida = 10;
+
+        //variáveis aqui
+
+        //codigos do inimigo
+
+        private void Die()
+        {
+            if(vida <= 0 && OnDie != null)
+            {
+                OnDie.Invoke(this);
+            }
+
+            this.gameObject.SetActive(false);
         }
     }
 }
